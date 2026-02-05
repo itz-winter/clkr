@@ -3139,7 +3139,7 @@ Game.Launch=function()
 			if (!Game.HasAchiev('Cookie-dunker') && l('bigCookie').getBoundingClientRect().bottom>l('milk').getBoundingClientRect().top+16 && Game.milkProgress>0.1) Game.Win('Cookie-dunker');
 		}
 		
-		Game.cookiesd+=(Game.cookies-Game.cookiesd)*0.3;
+		// Game.cookiesd+=(Game.cookies-Game.cookiesd)*0.3; // breaks new logic; removed
 		
 		if (Game.storeToRebuild) Game.RebuildStore();
 		if (Game.upgradesToRebuild) Game.RebuildUpgrades();
