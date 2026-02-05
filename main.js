@@ -3140,6 +3140,7 @@ Game.Launch=function()
 		}
 		
 		// Game.cookiesd+=(Game.cookies-Game.cookiesd)*0.3; // breaks new logic; removed
+		Game.cookiesd=Game.cookies;//temporary fix for something I broke
 		
 		if (Game.storeToRebuild) Game.RebuildStore();
 		if (Game.upgradesToRebuild) Game.RebuildUpgrades();
