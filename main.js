@@ -3139,7 +3139,7 @@ Game.Launch=function()
 			if (!Game.HasAchiev('Cookie-dunker') && l('bigCookie').getBoundingClientRect().bottom>l('milk').getBoundingClientRect().top+16 && Game.milkProgress>0.1) Game.Win('Cookie-dunker');
 		}
 		
-		// Game.cookiesd+=(Game.cookies-Game.cookiesd)*0.3; // breaks new logic; removed
+		// Game.cookiesd+=(Game.cookies-Game.cookiesd)*0.3; //breaks new logic; removed
 		Game.cookiesd=Game.cookies;//temporary fix for something I broke
 		
 		if (Game.storeToRebuild) Game.RebuildStore();
@@ -3262,9 +3262,11 @@ Game.Launch=function()
 			if (Game.elderWrathD>=1 && Game.elderWrathD<1.5) l('cookieShower').style.opacity=1-((Game.elderWrathD-1)/0.5);
 		}
 		
-		// var unit=(Math.round(Game.cookiesd)' cookie(s)').toString().length;
+		// var unit=(Math.round(Game.cookiesd)' cookie(s)').toString().length;//not needed anymore, removed
 		l('cookies').innerHTML=CompressValue(Game.cookiesd)+'<div style="font-size:50%;">per second : '+CompressValue(Game.cookiesPs)+'</div>';//display cookie amount
-		
+		// uses new CompressValue function that formats numbers with suffixes (B,T,Qd etc.) and also handles very large numbers better; removed use of the Beautify() function that was getting too slow on large numbers
+
+
 		/*
 		var el=l('bigCookie');
 		var s=Math.pow(Math.min(1,Game.cookies/100000),0.5)*1+0.5;
