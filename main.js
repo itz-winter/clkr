@@ -149,6 +149,41 @@ function UncompressLargeBin(arr)
 	return arr2;
 }
 
+function CompressValue(valIn)
+{
+	valIn=Math.round(valIn*100000)/100000;//get rid of weird rounding errors
+	valOut=""
+	// get length
+	var valInS=valIn.toString();
+	var valInL=valInS.length;
+	// get unit
+	var unit="";
+	if (valInL>69) {valIn/=1e69;unit=" DVg";}//duovigintillion
+	else if (valInL>66) {valIn/=1e66;unit=" UVg";}//unvigintillion
+	else if (valInL>63) {valIn/=1e63;unit=" Vg";}//vigintillion
+	else if (valInL>60) {valIn/=1e60;unit=" NvD";}//novemdecillion
+	else if (valInL>57) {valIn/=1e57;unit=" OcD";}//octodecillion
+	else if (valInL>54) {valIn/=1e54;unit=" SpD";}//septendecillion
+	else if (valInL>51) {valIn/=1e51;unit=" SxD";}//sexdecillion
+	else if (valInL>48) {valIn/=1e48;unit=" QnD";}//quindecillion
+	else if (valInL>45) {valIn/=1e45;unit=" QdD";}//quattuordecillion
+	else if (valInL>42) {valIn/=1e42;unit=" tDD";}//tredecillion
+	else if (valInL>39) {valIn/=1e39;unit=" DD";}//duodecillion
+	else if (valInL>36) {valIn/=1e36;unit=" UD";}//undecillion
+	else if (valInL>33) {valIn/=1e33;unit=" De";}//decillion
+	else if (valInL>30) {valIn/=1e30;unit=" N";}//nonillion
+	else if (valInL>27) {valIn/=1e27;unit=" O";}//octillion
+	else if (valInL>24) {valIn/=1e24;unit=" Sp";}//septillion
+	else if (valInL>21) {valIn/=1e21;unit=" Sx";}//sextillion
+	else if (valInL>18) {valIn/=1e18;unit=" Qn";}//quintillion
+	else if (valInL>15) {valIn/=1e15;unit=" Qd";}//quadrillion
+	else if (valInL>12) {valIn/=1e12;unit=" T";}//trillion
+	else if (valInL>9) {valIn/=1e9;unit=" B";}//billion
+	// else no unit, just display the number
+	valOut=Beautify(valIn,2)+unit;
+	return valOut;
+}
+
 //seeded random function, courtesy of http://davidbau.com/archives/2010/01/30/random_seeds_coded_hints_and_quintillions.html
 (function(a,b,c,d,e,f){function k(a){var b,c=a.length,e=this,f=0,g=e.i=e.j=0,h=e.S=[];for(c||(a=[c++]);d>f;)h[f]=f++;for(f=0;d>f;f++)h[f]=h[g=j&g+a[f%c]+(b=h[f])],h[g]=b;(e.g=function(a){for(var b,c=0,f=e.i,g=e.j,h=e.S;a--;)b=h[f=j&f+1],c=c*d+h[j&(h[f]=h[g=j&g+b])+(h[g]=b)];return e.i=f,e.j=g,c})(d)}function l(a,b){var e,c=[],d=(typeof a)[0];if(b&&"o"==d)for(e in a)try{c.push(l(a[e],b-1))}catch(f){}return c.length?c:"s"==d?a:a+"\0"}function m(a,b){for(var d,c=a+"",e=0;c.length>e;)b[j&e]=j&(d^=19*b[j&e])+c.charCodeAt(e++);return o(b)}function n(c){try{return a.crypto.getRandomValues(c=new Uint8Array(d)),o(c)}catch(e){return[+new Date,a,a.navigator.plugins,a.screen,o(b)]}}function o(a){return String.fromCharCode.apply(0,a)}var g=c.pow(d,e),h=c.pow(2,f),i=2*h,j=d-1;c.seedrandom=function(a,f){var j=[],p=m(l(f?[a,o(b)]:0 in arguments?a:n(),3),j),q=new k(j);return m(o(q.S),b),c.random=function(){for(var a=q.g(e),b=g,c=0;h>a;)a=(a+c)*d,b*=d,c=q.g(1);for(;a>=i;)a/=2,b/=2,c>>>=1;return(a+c)/b},p},m(c.random(),b)})(this,[],Math,256,6,52);
 
@@ -175,9 +210,9 @@ Game.Launch=function()
 		
 		Game.version=1.036;
 		Game.beta=0;
-		l('versionNumber').innerHTML='v.'+Game.version+(Game.beta?' <span style="color:#ff0;">beta</span>':'');
+		//l('versionNumber').innerHTML='v.'+Game.version+(Game.beta?' <span style="color:#ff0;">beta</span>':'');
 		//l('links').innerHTML=(Game.beta?'<a href="../" target="blank">Live version</a> | ':'<a href="beta" target="blank">Try the beta!</a> | ')+'<a href="http://orteil.dashnet.org/experiments/cookie/" target="blank">Cookie Clicker Classic</a>';
-		l('links').innerHTML='<a href="http://orteil.dashnet.org/experiments/cookie/" target="blank">Cookie Clicker Classic</a>';
+		//l('links').innerHTML='<a href="http://orteil.dashnet.org/experiments/cookie/" target="blank">Cookie Clicker Classic</a>';
 		
 		//latency compensator stuff
 		Game.time=new Date().getTime();
@@ -3226,9 +3261,8 @@ Game.Launch=function()
 			if (Game.elderWrathD>=1 && Game.elderWrathD<1.5) l('cookieShower').style.opacity=1-((Game.elderWrathD-1)/0.5);
 		}
 		
-		var unit=(Math.round(Game.cookiesd)==1?' cookie':' cookies');
-		if (Math.round(Game.cookiesd).toString().length>11) unit='<br>cookies';
-		l('cookies').innerHTML=Beautify(Math.round(Game.cookiesd))+unit+'<div style="font-size:50%;">per second : '+Beautify(Game.cookiesPs,1)+'</div>';//display cookie amount
+		// var unit=(Math.round(Game.cookiesd)' cookie(s)').toString().length;
+		l('cookies').innerHTML=CompressValue(Game.cookiesd)+'<div style="font-size:50%;">per second : '+CompressValue(Game.cookiesPs)+'</div>';//display cookie amount
 		
 		/*
 		var el=l('bigCookie');
