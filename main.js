@@ -180,7 +180,7 @@ function CompressValue(valIn)
 	else if (valInL>12) {valIn/=1e12;unit=" T";}//trillion
 	else if (valInL>9) {valIn/=1e9;unit=" B";}//billion
 	// else no unit, just display the number
-	valOut=Beautify(valIn,2)+unit;
+	valOut=Math.round(valIn*100000);
 	return valOut;
 }
 
